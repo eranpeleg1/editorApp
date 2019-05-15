@@ -30,12 +30,13 @@ const ButtonDef =  {
 async function install(editorSDK, appDefinitionId){
     const pageRef = await editorSDK.pages.getCurrent()
     const compRef = await editorSDK.components.add(appDefinitionId, {componentDefinition: ButtonDef, pageRef: pageRef})
-    editorSDK.components.data.update(appDefinitionId, {componentRef: compRef, data: {label: '1'}})
-    editorSDK.components.data.update(appDefinitionId, {componentRef: compRef, data: {label: '2'}})
-    await editorSDK.components.data.update(appDefinitionId, {componentRef: compRef, data: {label: '3'}})
+    // editorSDK.components.data.update(appDefinitionId, {componentRef: compRef, data: {label: '1'}})
+    // editorSDK.components.data.update(appDefinitionId, {componentRef: compRef, data: {label: '2'}})
+    // await editorSDK.components.data.update(appDefinitionId, {componentRef: compRef, data: {label: '3'}})
 
-    const data = await editorSDK.components.data.get(appDefinitionId, {componentRef: compRef})
-    editorSDK.components.data.update(appDefinitionId, {componentRef: compRef, data: {label: data.label}})
+    // const data = await editorSDK.components.data.get(appDefinitionId, {componentRef: compRef})
+    // console.log('dataaaaa', data)
+    //editorSDK.components.data.update(appDefinitionId, {componentRef: compRef, data: {label: data.label}})
 }
 
 async function editorReady(editorSDK, appDefinitionId, options) {
