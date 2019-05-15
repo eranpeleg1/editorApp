@@ -26,7 +26,7 @@ async function install(editorSDK, appDefinitionId){
     const compRef = await editorSDK.components.add(appToken, {componentDefinition: ButtonDef, pageRef: pageRef})
     editorSDK.components.data.update.(appToken, {componentRef: compRef, data: {label: '1'}})
     editorSDK.components.data.update.(appToken, {componentRef: compRef, data: {label: '2'}})
-    editorSDK.components.data.update.(appToken, {componentRef: compRef, data: {label: '1'}})
+    editorSDK.components.data.update.(appToken, {componentRef: compRef, data: {label: '3'}})
     
     const data = await editorSDK.components.data.get.(appToken, {componentRef: compRef})
     editorSDK.components.data.update.(appToken, {componentRef: compRef, data: {label: data.label}})
