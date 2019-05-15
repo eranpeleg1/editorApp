@@ -33,7 +33,7 @@ async function install(editorSDK, appDefinitionId){
     //const data = await editorSDK.components.get(appDefinitionId, {componentRefs: compRef, properties: ['data', 'props', 'componentType', 'sdkType']})
 
      editorSDK.components.data.update(appDefinitionId, {componentRef: compRef, data: {label: '1'}})
-     editorSDK.components.data.update(appDefinitionId, {componentRef: compRef, data: {label: '2'}})
+     await editorSDK.components.data.update(appDefinitionId, {componentRef: compRef, data: {label: '2'}})
      const data = await editorSDK.components.get(appDefinitionId, {componentRefs: compRef, properties: ['data', 'props', 'componentType', 'sdkType']})
 
     // await editorSDK.components.data.update(appDefinitionId, {componentRef: compRef, data: {label: '3'}})
