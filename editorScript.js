@@ -59,3 +59,4 @@ module.exports = {
     onEvent: onEvent,
     editorReady: editorReady,
     getAppManifest: getAppManifest
+}
