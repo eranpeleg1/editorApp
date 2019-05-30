@@ -32,14 +32,14 @@ async function install(editorSDK, appDefinitionId){
     const compRef = await editorSDK.components.add(appDefinitionId, {componentDefinition: ButtonDef, pageRef: pageRef})
     //const data = await editorSDK.components.get(appDefinitionId, {componentRefs: compRef, properties: ['data', 'props', 'componentType', 'sdkType']})
 
-     editorSDK.components.data.update(appDefinitionId, {componentRef: compRef, data: {label: '1'}})
-     await editorSDK.components.data.update(appDefinitionId, {componentRef: compRef, data: {label: '2'}})
-     const data = await editorSDK.components.get(appDefinitionId, {componentRefs: compRef, properties: ['data', 'props', 'componentType', 'sdkType']})
+//      editorSDK.components.data.update(appDefinitionId, {componentRef: compRef, data: {label: '1'}})
+//      await editorSDK.components.data.update(appDefinitionId, {componentRef: compRef, data: {label: '2'}})
+//      const data = await editorSDK.components.get(appDefinitionId, {componentRefs: compRef, properties: ['data', 'props', 'componentType', 'sdkType']})
 
     // await editorSDK.components.data.update(appDefinitionId, {componentRef: compRef, data: {label: '3'}})
 
     // const data = await editorSDK.components.data.get(appDefinitionId, {componentRef: compRef})
-    console.log('dataaaaa', data)
+//     console.log('dataaaaa', data)
     //editorSDK.components.data.update(appDefinitionId, {componentRef: compRef, data: {label: data.label}})
 }
 
