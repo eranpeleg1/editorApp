@@ -34,11 +34,7 @@ async function install(editorSDK, appDefinitionId){
 }
 
 async function editorReady(editorSDK, appDefinitionId, options) {
-    console.log('EDITOR READDYYY')
-    if(options.firstInstall){
-        console.log('first install')
-        install(editorSDK, appDefinitionId);
-    }
+    install(editorSDK, appDefinitionId);
 }
 
 function onEvent(event) {
