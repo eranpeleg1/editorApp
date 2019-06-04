@@ -1,95 +1,56 @@
 'use strict';
 
 function getAppManifest() {
-    return {
-        exports: {
-            appWidget: {
-                tagname: 'appWidget',
-                synthetic: false,
-                inherits: {},
-                description: 'fffff',
-                viewernames: {appWidget: true},
-                members: {
-                    setWeatherDeg: {
-                        description: 'set the button deg label',
-                        kind: 'function'
-                    }
-                }
-            }
-        },
-        controllersStageData: {
-            appWidget: {
-                default: {
-                    displayName: 'GoogleApp',
-                    connections: {
-                        container_role: {
+    return {};
+}
 
-                        },
-                        weather_btn: {
-                            displayName: 'degreeButton'
-                        }
-                    }
-                }
-            }
-        }
+const ButtonDef =  {
+    componentType: 'wysiwyg.viewer.components.SiteButton',
+    layout: {
+        x: 100,
+        y: 100,
+        width: 128,
+        height: 40
+    },
+    data:{
+        label:'does it work??',
+        link:'',
+        metaData:{isPreset: false, schemaVersion: '1.0', isHidden: false},
+        type:'LinkableButton'
+    },
+    'type': 'Component',
+    'props': {
+        margin:0,
+        align:'center',
+        metaData:  {isPreset: false, schemaVersion: '1.0', isHidden: false},
+        type: 'ButtonProperties'
     }
 }
 
-var BOX_STRUCTURE  = {
-    componentType: 'mobile.core.components.Container',
-    style: 'c4',
-    type: 'Container',
-    components: [],
-    layout: {height: 500, width: 800, x: 0, y: 0}
-
-}
-
-const APP_WIDGET_STRUCTURE  = {
-    componentType: 'platform.components.AppWidget',
-    layout: {height: 500, width: 800, x: 0, y: 0},
-    style: 'appWidget1',
-    styleId: 'appWidget1',
-    type: 'Container',
-    data: {
-        type: 'AppController',
-        applicationId: '6b8daa12-d255-4e78-8eda-d1d186f5d184',
-        name: 'appWidget',
-        controllerType: 'appWidget'
-    },
-    components: [BOX_STRUCTURE]
-}
-
-
-async function addAppWidget(editorSDK, appToken) {
-    const pageRef = await editorSDK.pages.getCurrent();
-    const appWidgetRef = await editorSDK.components.add(appToken, {componentDefinition: APP_WIDGET_STRUCTURE, pageRef: pageRef});
-    const children = await  editorSDK.components.getChildren(appToken, {componentRef: appWidgetRef});
-    editorSDK.controllers.connect(appToken, {
-        connectToRef: children[0],
-        controllerRef: appWidgetRef,
-        role: 'container_role',
-        connectionConfig: {},
-        isPrimary: true
-    })
-    return appWidgetRef;
-}
-
-
 async function install(editorSDK, appDefinitionId){
-    const appWidgetRef = await addAppWidget(editorSDK, appDefinitionId);
+    const pageRef = await editorSDK.pages.getCurrent()
+    const compRef = await editorSDK.components.add(appDefinitionId, {componentDefinition: ButtonDef, pageRef: pageRef})
+    setTimeout(() => editorSDK.components.data.update(appDefinitionId, {componentRef: compRef, data: {label: 'yep ds works over Bolt!!!'}}) ,5000)
 }
 
 async function editorReady(editorSDK, appDefinitionId, options) {
-    if (await options.firstInstall){
-        await install(editorSDK, appDefinitionId)
+    console.log('EDITOR READDYYY')
+    if(options.firstInstall){
+        console.log('first install')
+        install(editorSDK, appDefinitionId);
     }
 }
 
-async function onEvent() {
+function onEvent(event) {
+    switch (event.eventType) {
+        default:
+            break;
+    }
 }
+
 
 module.exports = {
     onEvent: onEvent,
     editorReady: editorReady,
     getAppManifest: getAppManifest
-};
+}
