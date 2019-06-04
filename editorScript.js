@@ -74,63 +74,9 @@ async function addAppWidget(editorSDK, appToken) {
     return appWidgetRef;
 }
 
-async function addGoogleMaps(editorSDK, appToken, controllerRef, containerRef) {
-    const componentDefinition = {
-        componentType: 'wysiwyg.viewer.components.GoogleMap',
-        data: {
-            address: '500 Terry Francois Street, 6th Floor. San Francisco, CA 94158',
-            addressInfo: 'Wix Office',
-            latitude: 37.77065,
-            longitude: -122.387301,
-            type: 'GeoMap',
-            mapStyle: [],
-            metaData:{
-                isHidden: false,
-                isPreset: true,
-                schemaVersion: '1.0'
-            }
-        },
-    layout: {
-            width: 608,
-        height: 280,
-        x: 186,
-        y: 211
-    },
-    props: {
-            id: 'googleMapDefaultProp',
-        mapDragging: false,
-        mapType: 'ROADMAP',
-        showMapType: true,
-        showPosition: true,
-        showStreetView: true,
-        showZoom: true,
-        metaData:{
-            isHidden: false,
-            isPreset: true,
-            schemaVersion: '1.0'
-        }
-    },
-    style: 'gm1',
-    type: 'Component'
-    }
-    const compRef = await editorSDK.components.add(appToken, {componentDefinition, pageRef: containerRef})
-    editorSDK.controllers.connect(appToken, {
-        connectToRef: compRef,
-        controllerRef: controllerRef,
-        role: 'container_inside',
-        connectionConfig: {},
-        isPrimary: true
-    })
-    return compRef;
-}
-
-
 
 async function install(editorSDK, appDefinitionId){
     const appWidgetRef = await addAppWidget(editorSDK, appDefinitionId);
-    const children = await  editorSDK.components.getChildren(appDefinitionId, {componentRef: appWidgetRef});
-    await addGoogleMaps(editorSDK, appDefinitionId, appWidgetRef, children[0])
-
 }
 
 async function editorReady(editorSDK, appDefinitionId, options) {
