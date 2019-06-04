@@ -1,66 +1,149 @@
 'use strict';
 
 function getAppManifest() {
-    return {};
-}
+    return {
+        exports: {
+            appWidget: {
+                tagname: 'appWidget',
+                synthetic: false,
+                inherits: {},
+                description: 'fffff',
+                viewernames: {appWidget: true},
+                members: {
+                    setWeatherDeg: {
+                        description: 'set the button deg label',
+                        kind: 'function'
+                    }
+                }
+            }
+        },
+        controllersStageData: {
+            appWidget: {
+                default: {
+                    displayName: 'GoogleApp',
+                    connections: {
+                        container_role: {
 
-const ButtonDef =  {
-    componentType: 'wysiwyg.viewer.components.SiteButton',
-    layout: {
-        x: 100,
-        y: 100,
-        width: 128,
-        height: 40
-    },
-    data:{
-        label:'button',
-        link:'',
-        metaData:{isPreset: false, schemaVersion: '1.0', isHidden: false},
-        type:'LinkableButton'
-    },
-    'type': 'Component',
-    'props': {
-        margin:0,
-        align:'center',
-        metaData:  {isPreset: false, schemaVersion: '1.0', isHidden: false},
-        type: 'ButtonProperties'
+                        },
+                        weather_btn: {
+                            displayName: 'degreeButton'
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
+var BOX_STRUCTURE  = {
+    componentType: 'mobile.core.components.Container',
+    style: 'c4',
+    type: 'Container',
+    components: [],
+    layout: {height: 500, width: 800, x: 0, y: 0}
+
+}
+
+const APP_WIDGET_STRUCTURE  = {
+    componentType: 'platform.components.AppWidget',
+    layout: {height: 500, width: 800, x: 0, y: 0},
+    style: 'appWidget1',
+    styleId: 'appWidget1',
+    type: 'Container',
+    data: {
+        type: 'AppController',
+        applicationId: '6b8daa12-d255-4e78-8eda-d1d186f5d184',
+        name: 'appWidget',
+        controllerType: 'appWidget'
+    },
+    components: [BOX_STRUCTURE]
+}
+
+
+async function addAppWidget(editorSDK, appToken) {
+    const pageRef = await editorSDK.pages.getCurrent();
+    const appWidgetRef = await editorSDK.components.add(appToken, {componentDefinition: APP_WIDGET_STRUCTURE, pageRef: pageRef});
+    const children = await  editorSDK.components.getChildren(appToken, {componentRef: appWidgetRef});
+    editorSDK.controllers.connect(appToken, {
+        connectToRef: children[0],
+        controllerRef: appWidgetRef,
+        role: 'container_role',
+        connectionConfig: {},
+        isPrimary: true
+    })
+    return appWidgetRef;
+}
+
+async function addGoogleMaps(editorSDK, appToken, controllerRef, containerRef) {
+    const componentDefinition = {
+        componentType: 'wysiwyg.viewer.components.GoogleMap',
+        data: {
+            address: '500 Terry Francois Street, 6th Floor. San Francisco, CA 94158',
+            addressInfo: 'Wix Office',
+            latitude: 37.77065,
+            longitude: -122.387301,
+            type: 'GeoMap',
+            mapStyle: [],
+            metaData:{
+                isHidden: false,
+                isPreset: true,
+                schemaVersion: '1.0'
+            }
+        },
+    layout: {
+            width: 608,
+        height: 280,
+        x: 186,
+        y: 211
+    },
+    props: {
+            id: 'googleMapDefaultProp',
+        mapDragging: false,
+        mapType: 'ROADMAP',
+        showMapType: true,
+        showPosition: true,
+        showStreetView: true,
+        showZoom: true,
+        metaData:{
+            isHidden: false,
+            isPreset: true,
+            schemaVersion: '1.0'
+        }
+    },
+    style: 'gm1',
+    type: 'Component'
+    }
+    const compRef = await editorSDK.components.add(appToken, {componentDefinition, pageRef: containerRef})
+    editorSDK.controllers.connect(appToken, {
+        connectToRef: compRef,
+        controllerRef: controllerRef,
+        role: 'container_inside',
+        connectionConfig: {},
+        isPrimary: true
+    })
+    return compRef;
+}
+
+
+
 async function install(editorSDK, appDefinitionId){
-    const pageRef = await editorSDK.pages.getCurrent()
-    const compRef = await editorSDK.components.add(appDefinitionId, {componentDefinition: ButtonDef, pageRef: pageRef})
-    //const data = await editorSDK.components.get(appDefinitionId, {componentRefs: compRef, properties: ['data', 'props', 'componentType', 'sdkType']})
+    const appWidgetRef = await addAppWidget(editorSDK, appDefinitionId);
+    const children = await  editorSDK.components.getChildren(appDefinitionId, {componentRef: appWidgetRef});
+    await addGoogleMaps(editorSDK, appDefinitionId, appWidgetRef, children[0])
 
-//      editorSDK.components.data.update(appDefinitionId, {componentRef: compRef, data: {label: '1'}})
-//      await editorSDK.components.data.update(appDefinitionId, {componentRef: compRef, data: {label: '2'}})
-//      const data = await editorSDK.components.get(appDefinitionId, {componentRefs: compRef, properties: ['data', 'props', 'componentType', 'sdkType']})
-
-    // await editorSDK.components.data.update(appDefinitionId, {componentRef: compRef, data: {label: '3'}})
-
-    // const data = await editorSDK.components.data.get(appDefinitionId, {componentRef: compRef})
-//     console.log('dataaaaa', data)
-    //editorSDK.components.data.update(appDefinitionId, {componentRef: compRef, data: {label: data.label}})
 }
 
 async function editorReady(editorSDK, appDefinitionId, options) {
-    console.log('EDITOR READDYYY')
-    if(options.firstInstall){
-        console.log('first install')
-        install(editorSDK, appDefinitionId);
+    if (await options.firstInstall){
+        await install(editorSDK, appDefinitionId)
     }
 }
 
-function onEvent(event) {
-    switch (event.eventType) {
-        default:
-            break;
-    }
+async function onEvent() {
 }
-
 
 module.exports = {
     onEvent: onEvent,
     editorReady: editorReady,
     getAppManifest: getAppManifest
-}
+};
